@@ -3,7 +3,6 @@ const express = require('express');
 const app = express();
 const { RichEmbed } = require("discord.js");
 const config = require('./config.json');
-//const votes = require('./votes.js')
 const Discord = require('discord.js');
 var cron = require('node-cron');
 const client = new Discord.Client({ fetchAllMembers: false, messageCacheMaxSize: 5 }); 
@@ -32,10 +31,7 @@ client.on("message", msg =>{
     .setThumbnail(client.user.displayAvatarURL)
     .setDescription(`My current prefix is : \`${config.prefix}\`\nUse \`${config.prefix}help\` for more help.`)
     .setFooter(config.EmbedFooter)
-  if(msg.content === '<@!770410190151483413>'){
-    msg.channel.send(emmbed);// 70173139222816358
-  }
-  if(msg.content === '@Joins+#1643'){
+  if(msg.content === `<@!${client.user.id}>`){
     msg.channel.send(emmbed);
   }
 })
@@ -56,71 +52,47 @@ client.on("guildDelete", async guild => {
   const event = require('./events/guildDelete.js').execute(client, guild) 
 }) 
 
-client.on("guildMemberUpdate", async (oldmem, newmem, data) => {
-  if (newmem.guild.id !== "768786498241036288") return 
-  if (oldmem.roles.cache.has("773254679772790837")) return
-  if (!newmem.roles.cache.has("771838320736862249")) return
-  newmem.roles.add('773254679772790837');
-  if (await db.fetch(`coins_${newmem.user.id}`) === null) return
-
-  let logchannel = client.channels.cache.get("771793666050097184")
-  let embed1 = new Discord.MessageEmbed()
-  .setTitle("Boost System :robot:")
-  .setDescription(`**<@${newmem.user.id}> has started boosting ! :heart:**\n> Now he will earn \`7 coins every day\``)
-  .setThumbnail("https://media.tenor.com/images/468089df8bd2389c05038681f0710919/tenor.gif")
-  .setFooter(config.EmbedFooter, newmem.user.displayAvatarURL({ format: "png", dynamic: true }))
-  .setColor("#2f3136")
-  .setThumbnail(newmem.user.displayAvatarURL({ format: "png", dynamic: true }))
-  logchannel.send(embed1)
-
-  cron.schedule('* 15 8 * * *', () => {
-    if (!newmem.roles.cache.has("771838320736862249")) return
-    console.log(`${newmem.user.id} a recu 7 coins pour boost le discord`)
-    db.add(`coins_${newmem.user.id}`, 7) 
-  });
-})
-
 client.on("message", async message => {
   if(message.author.bot) return;
   if (!message.guild)
   return
   db.add(`messages_${message.guild.id}_${message.author.id}`, 1)
 
-//   let messagefetch = db.fetch(`messages_${message.guild.id}_${message.author.id}`)
+  let messagefetch = db.fetch(`messages_${message.guild.id}_${message.author.id}`)
 
-//   let messages;
-//   if (messagefetch == 25) messages = 25; //Level 1
-//   else if (messagefetch == 65) messages = 65; // Level 2
-//   else if (messagefetch == 115) messages = 115; // Level 3
-//   else if (messagefetch == 200) messages = 200; // Level 4
-//   else if (messagefetch == 300) messages = 300; // Level 5
-//   else if (messagefetch == 400) messages = 450; // Level 6
-//   else if (messagefetch == 500) messages = 500; // Level 7
-//   else if (messagefetch == 600) messages = 600; // Level 8
-//   else if (messagefetch == 700) messages = 700; // Level 9
-//   else if (messagefetch == 1000) messages = 1000; // Level 10
+  let messages;
+  if (messagefetch == 25) messages = 25; //Level 1
+  else if (messagefetch == 65) messages = 65; // Level 2
+  else if (messagefetch == 115) messages = 115; // Level 3
+  else if (messagefetch == 200) messages = 200; // Level 4
+  else if (messagefetch == 300) messages = 300; // Level 5
+  else if (messagefetch == 400) messages = 450; // Level 6
+  else if (messagefetch == 500) messages = 500; // Level 7
+  else if (messagefetch == 600) messages = 600; // Level 8
+  else if (messagefetch == 700) messages = 700; // Level 9
+  else if (messagefetch == 1000) messages = 1000; // Level 10
 
-//   if(messagefetch == 25) {
-//     return message.channel.send(`> <@${message.author.id}> Votre activité sur ce serveur est **Niveau 1**!`)
-//   } else if(messagefetch == 65) {
-//     return message.channel.send(`> <@${message.author.id}> Votre activité sur ce serveur est **Niveau 2**!`)
-//   } else if(messagefetch == 115) {
-//     return message.channel.send(`> <@${message.author.id}> Votre activité sur ce serveur est **Niveau 3**!`)
-//   } else if(messagefetch == 200) {
-//     return message.channel.send(`> <@${message.author.id}> Votre activité sur ce serveur est **Niveau 4**!`)
-//   } else if(messagefetch == 300) {
-//     return message.channel.send(`> <@${message.author.id}> Votre activité sur ce serveur est **Niveau 5**!`)
-//   } else if(messagefetch == 450) {
-//     return message.channel.send(`> <@${message.author.id}> Votre activité sur ce serveur est **Niveau 6**!`)
-//   } else if(messagefetch == 500) {
-//     return message.channel.send(`> <@${message.author.id}> Votre activité sur ce serveur est **Niveau 7**!`)
-//   } else if(messagefetch == 600) {
-//     return message.channel.send(`> <@${message.author.id}> Votre activité sur ce serveur est **Niveau 8**!`)
-//   } else if(messagefetch == 700) {
-//     return message.channel.send(`> <@${message.author.id}> Votre activité sur ce serveur est **Niveau 9**!`)
-//   } else if(messagefetch == 1000) {
-//     return message.channel.send(`> <@${message.author.id}> Votre activité sur ce serveur est **Niveau 10**! Bravo tu est au maximum`)
-// }
+  if(messagefetch == 25) {
+    return message.channel.send(`> <@${message.author.id}> Votre activité sur ce serveur est **Niveau 1**!`)
+  } else if(messagefetch == 65) {
+    return message.channel.send(`> <@${message.author.id}> Votre activité sur ce serveur est **Niveau 2**!`)
+  } else if(messagefetch == 115) {
+    return message.channel.send(`> <@${message.author.id}> Votre activité sur ce serveur est **Niveau 3**!`)
+  } else if(messagefetch == 200) {
+    return message.channel.send(`> <@${message.author.id}> Votre activité sur ce serveur est **Niveau 4**!`)
+  } else if(messagefetch == 300) {
+    return message.channel.send(`> <@${message.author.id}> Votre activité sur ce serveur est **Niveau 5**!`)
+  } else if(messagefetch == 450) {
+    return message.channel.send(`> <@${message.author.id}> Votre activité sur ce serveur est **Niveau 6**!`)
+  } else if(messagefetch == 500) {
+    return message.channel.send(`> <@${message.author.id}> Votre activité sur ce serveur est **Niveau 7**!`)
+  } else if(messagefetch == 600) {
+    return message.channel.send(`> <@${message.author.id}> Votre activité sur ce serveur est **Niveau 8**!`)
+  } else if(messagefetch == 700) {
+    return message.channel.send(`> <@${message.author.id}> Votre activité sur ce serveur est **Niveau 9**!`)
+  } else if(messagefetch == 1000) {
+    return message.channel.send(`> <@${message.author.id}> Votre activité sur ce serveur est **Niveau 10**! Bravo tu est au maximum`)
+}
 });
 
 client.login(config.token)
