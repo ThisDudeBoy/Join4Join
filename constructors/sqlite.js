@@ -1,6 +1,4 @@
 const Discord = require('discord.js')
-//const Hexo = require("hexo-db");
-//const db = new Hexo.Database("http://api.usersplus.xyz:60001/")
 const db = require('quick.db');
 const get = async (message, user) => {
   let data = {}
