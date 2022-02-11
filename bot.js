@@ -95,4 +95,4 @@ client.on("message", async message => {
 }
 });
 
-client.login("NDg5MDc2NjQ3NzI3ODU3Njg1.W5fOHw.OI9sSNB49LKLdm47BGhTCF8Lpb8")
+client.login(config.token)
